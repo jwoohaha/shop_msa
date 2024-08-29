@@ -31,17 +31,17 @@ public class Order {
 
     private String status;
 
-    @PostPersist
+    @PostPersist // 엔티티가 만들어진 후에 실행
     public void onPostPersist() {
         OrderPlaced orderPlaced = new OrderPlaced(this);
         orderPlaced.publishAfterCommit();
-
+    }
+    
+    @PreRemove
+    public void onPreRemove() {
         OrderCancelled orderCancelled = new OrderCancelled(this);
         orderCancelled.publishAfterCommit();
     }
-
-    @PreRemove
-    public void onPreRemove() {}
 
     public static OrderRepository repository() {
         OrderRepository orderRepository = OrderApplication.applicationContext.getBean(
